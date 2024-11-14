@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Grid</title>
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+        .switch-container {
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+        .slider.round:before {
+            border-radius: 50%;
+        }
+        .subsection {
+            display: none;
+            margin-top: 10px;
+        }
+        .switch-container input:checked ~ .subsection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function createSwitch(id, hasSubsection) {
+            const container = document.createElement('div');
+            container.className = 'switch-container';
+
+            const label = document.createElement('label');
+            label.className = 'switch';
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.checked = Math.random() > 0.5;
+            input.id = id;
+
+            const slider = document.createElement('span');
+            slider.className = 'slider round';
+
+            label.appendChild(input);
+            label.appendChild(slider);
+            container.appendChild(label);
+
+            if (hasSubsection) {
+                const subsection = document.createElement('div');
+                subsection.className = 'subsection';
+                for (let i = 0; i < 3; i++) {
+                    subsection.appendChild(createSwitch(`${id}-${i}`, false));
+                }
+                container.appendChild(subsection);
+            }
+
+            input.addEventListener('change', () => {
+                const allSwitches = document.querySelectorAll('input[type="checkbox"]');
+                const totalSwitches = allSwitches.length;
+                const switchesToChange = Math.floor(totalSwitches * 0.05);
+
+                for (let i = 0; i < switchesToChange; i++) {
+                    const randomSwitch = allSwitches[Math.floor(Math.random() * totalSwitches)];
+                    randomSwitch.checked = !randomSwitch.checked;
+                }
+            });
+
+            return container;
+        }
+
+        for (let i = 0; i < 368; i++) {
+            document.body.appendChild(createSwitch(`switch-${i}`, Math.random() > 0.7));
+        }
+    </script>
+</body>
+</html>
